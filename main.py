@@ -1,5 +1,3 @@
-# --- Warriors 0.1 ---
-# --- Non graphical Python Game Practice ---
 # --- Python 3.2.5 ---
 # --- John Hughes ---
 # --- Started September 2015
@@ -20,13 +18,24 @@ print()
 # Inventories
 userInv = []
 batInv = []
+wolfInv = []
+snakeInv = []
+orcInv = []
+giantInv = []
+
+
 
 # Variables    name       hp     atk     inv
-user =       [name,      10000, 1000, userInv]
-bat =        ["Bat",      1000,  500,  batInv]
-wolf =       ["Wolf",     1500, 1000, wolfInv] # Add random player picking
+user =       [name,      10000, 1000,  userInv]
+bat =        ["Bat",      1000,  500,   batInv]
+wolf =       ["Wolf",     1500, 1000,  wolfInv]
+snake =      ["Snake",    1000, 1000, snakeInv]
+orc =        ["Orc",      2000, 1500,   orcInv]
+giant =      ["Giant",    4000, 2000, giantInv]
 
+enemyList =  [bat, wolf, snake, orc, giant]
 
+r = random.randrange(5)
 
 
 
@@ -36,6 +45,8 @@ wolf =       ["Wolf",     1500, 1000, wolfInv] # Add random player picking
 # Initialize sentry variable
 game = True
 
+# Experience points
+exp = 0
 
 while game == True:
     decision = input("(F)ight \n(I)nventory \n(P)rofile \n(Q)uit\n\n")
@@ -54,7 +65,8 @@ while game == True:
         print ("\nName = " + name + \
                "\nHitpoints = " + str(user[1]) + \
                "\nAttack = " + str(user[2]) + \
-               "\n\n")
+               "\nExp = " + str(exp) + "\n\n")
+           
 
     ### INVENTORY PAGE ###
     elif decision == i.lower():
@@ -72,12 +84,15 @@ while game == True:
             Subtracts the users atk from the enemy's hitpoints.
             Aka attacks the enemy.
             """
-           
             atkerHits = random.randrange(atker[2])
             defender[1] -= atkerHits
             if defender[0] != name and defender[1] <= 0:
+                global exp
+                exp += 1
                 print("You killed " + str(defender[0]) + " and win with " + \
-                      str(atker[1]) + " hp left.")
+                      str(atker[1]) + " hp left.\n\n")
+                print("You gainted 1 experience points.")
+                
                 
             elif defender[0] == name and defender[1] <= 0:
                 print ("You have died.")
@@ -87,5 +102,11 @@ while game == True:
                        str(atkerHits) + " hitpoints.")
                 print (defender[0] + ": " + str(defender[1]) + " Hitpoints.\n")
             return defender[1]
-        atk(user, bat)
-        atk(bat, user)
+
+
+        enemy = enemyList[r]
+        atk(user, enemy)
+        if enemy[1] > 0:
+            atk(enemy, user)
+            if user[1] <= 0:
+                game = False
